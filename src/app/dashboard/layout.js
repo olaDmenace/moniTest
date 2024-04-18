@@ -41,11 +41,51 @@ const layout = ({ children }) => {
 
   const user = useUserData();
 
+  const [mobile, setMobile] = useState(false);
+
+  const toggleMenu = () => {
+    setMobile((oldstate) => !oldstate);
+  };
+
   return (
-    <div className="bg-slate-300">
+    <div className="bg-slate-300 min-h-screen">
       <div className="md:hidden">
-        <Navbar />
+        <Navbar onClick={toggleMenu} />
       </div>
+      {mobile && (
+        <div
+          className="bg-black/50 fixed z-40 h-screen w-full top-0 left-0"
+          onClick={toggleMenu}
+        >
+          <div
+            className="bg-slate-300 grid px-[10%] content-center h-screen w-3/4 absolute right-0 rounded-l-lg"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="relative grid gap-5">
+              {dashMenu.map((menu, index) => (
+                <Link
+                  key={index}
+                  href={menu.link}
+                  onClick={toggleMenu}
+                  className={
+                    isActive(menu.link)
+                      ? "bg-slate-400 px-2 py-3 rounded-lg text-white text-start"
+                      : "hover:text-yalaPrimary/50 transition text-start"
+                  }
+                >
+                  {menu.name}
+                </Link>
+              ))}
+              <button
+                className="hover:text-yalaPrimary/50 transition text-start"
+                onClick={handleLogout}
+              >
+                Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="min-h-full md:grid md:grid-cols-3 lg:grid-cols-5">
         <div className="hidden max-w-full md:block h-screen bg-slate-700 px-6 sticky top-0 left-0 py-10 md:grid md:content-between">
           <Image src={Logo} alt="logo" />

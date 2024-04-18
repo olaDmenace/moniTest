@@ -44,7 +44,6 @@ const Dashboard = () => {
   useEffect(() => {
     if (user) {
       fetchUserData(user.uid);
-      console.log(user.uid);
     }
   }, [user]);
 
@@ -75,10 +74,10 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="px-4 overflow-clip content-start py-10 grid gap-16 md:col-span-2 lg:col-span-4 md:px-8 md:max-h-screen md:py-5 mb-10 lg:grid-flow-col lg:grid-cols-2 lg:gap-12 lg:pt-12 md:mb-0">
+    <div className="px-4 overflow-clip content-start py-10 grid gap-16 md:col-span-2 lg:col-span-4 md:px-8 md:max-h-screen md:py-5 pb-10 lg:grid-flow-col lg:grid-cols-2 lg:gap-12 lg:pt-12 md:mb-0">
       {pop && (
         <div
-          className="w-screen fixed h-full bg-black/50 top-0 left-0 z-30 grid content-center"
+          className="w-screen fixed h-full bg-black/50 top-0 left-0 z-20 grid content-center"
           onClick={() => setPop(false)}
         >
           <div
