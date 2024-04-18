@@ -1,112 +1,282 @@
-import Image from "next/image";
+"use client";
+// import PrimaryButton from "@/components/buttons/PrimaryButton";
+import PrimaryButton from "../components/buttons/PrimaryButton";
+// import SecondaryButton from "@/components/buttons/SecondaryButton";
+import SecondaryButton from "../components/buttons/SecondaryButton";
+// import SignIn from "@/components/membershipForms/SignIn";
+import SignIn from "../components/membershipForms/SignIn";
+// import SignUp from "@/components/membershipForms/SignUp";
+import SignUp from "../components/membershipForms/SignUp";
+import Navbar from "../components/navigation/Navbar";
+import { auth, createUserWithEmailAndPassword, updateProfile } from "../lib/db";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { doc, setDoc } from "firebase/firestore";
+import { firestore } from "../lib/db";
+// import withAuth from "@/utils/ProtectedRoute";
 
 export default function Home() {
+  const [login, setLogin] = useState(true);
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [error, setError] = useState("");
+  const [bg, setBg] = useState("bg-red-700");
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
+  const showNewForm = () => {
+    setLogin(!login);
+    setPassword("");
+    setFullName("");
+    setConfirmPassword("");
+    setEmail("");
+    setError(false);
+  };
+
+  const handleProfileUpdate = async (e) => {
+    e.preventDefault();
+    if (login) {
+      if (!email || !password) {
+        setError("Input fields cannot be empty");
+      } else {
+        setLoading(true);
+        try {
+          const userCredential = await signInWithEmailAndPassword(
+            auth,
+            email,
+            password
+          );
+          // Signed in
+          const user = userCredential.user;
+          setBg("bg-green-700");
+          // console.log(user);
+          setError("Account login success");
+          setEmail("");
+          setPassword("");
+          // setLoading(false);
+          router.push("/dashboard"); // Redirect to dashboard after successful login
+        } catch (error) {
+          console.log(error.message);
+          if ((error = "Firebase: Error (auth/invalid-credential).")) {
+            setError("Invalid login credentials");
+          } else {
+            setError("Failed to sign in, please try again");
+            // setLoading(false);
+          }
+        }
+        setLoading(false);
+      }
+    } else {
+      if (!fullName || !email || !password) {
+        setError("Input fields cannot be empty!");
+      } else {
+        if (password !== confirmPassword) {
+          setError("Passwords do not match");
+        } else {
+          setLoading(true);
+          try {
+            const userCredential = await createUserWithEmailAndPassword(
+              auth,
+              email,
+              password
+            );
+            const user = userCredential.user;
+
+            // Update user's profile with fullName
+            await updateProfile(user, { displayName: fullName });
+
+            // Add additional data to the user's profile in Firestore
+            await setDoc(doc(firestore, "users", user.uid), {
+              email: user.email,
+              displayName: fullName,
+              photoURL: "",
+              walletBallance: 0,
+              transactionHistory: [],
+            });
+            // User created successfully
+            setError("User created successfully");
+            setBg("bg-green-700");
+            setLoading(false);
+            setPassword("");
+            setFullName("");
+            setConfirmPassword("");
+            setEmail("");
+            setTimeout(() => {
+              setLogin(true);
+            }, 5000);
+            return user;
+          } catch (error) {
+            // Handle sign-up errors
+            console.error("Error signing up:", error, error.message);
+            if (error.code === "auth/email-already-in-use") {
+              setError("This email address is already in use");
+            } else {
+              setError("Account creation failed");
+            }
+            // setError(error);
+            setLoading(false);
+            // throw error;
+          }
+        }
+      }
+    }
+  };
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (error) {
+        setError(false);
+      }
+    }, 5000);
+    setBg("bg-red-700");
+  }, [error]);
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.js</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <main className="min-h-screen w-full flex-1">
+      <Navbar />
+      <div className="grid md:grid-flow-col mx-auto md:grid-cols-2 md:px-6 md:pt-[10%] lg:pt-0 xl:pt-[5%] lg:max-w-7xl">
+        <div className="px-[5%] py-4 space-y-4 h-full">
+          <div>
+            <h2 className="font-bold text-2xl">Get Started</h2>
+            <p className="font-medium">
+              Simplify and streamline your global payments to suppliers,
+              vendors, and service providers with our seamless global payment
+              solution. Get started by filling the form.
+            </p>
+          </div>
+          <ul className="font-medium grid gap-5">
+            <li className="grid grid-flow-col grid-cols-12 gap-[5%] items-center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="w-6 h-6 text-yalaPrimary"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M14.615 1.595a.75.75 0 0 1 .359.852L12.982 9.75h7.268a.75.75 0 0 1 .548 1.262l-10.5 11.25a.75.75 0 0 1-1.272-.71l1.992-7.302H3.75a.75.75 0 0 1-.548-1.262l10.5-11.25a.75.75 0 0 1 .913-.143Z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              <p className="col-span-11">
+                Pay your vendors and suppliers in currency of choice (Euro, USD
+                etc.).
+              </p>
+            </li>
+            <li className="grid grid-flow-col grid-cols-12 gap-[5px] items-center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="w-6 h-6 text-yalaPrimary"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M14.615 1.595a.75.75 0 0 1 .359.852L12.982 9.75h7.268a.75.75 0 0 1 .548 1.262l-10.5 11.25a.75.75 0 0 1-1.272-.71l1.992-7.302H3.75a.75.75 0 0 1-.548-1.262l10.5-11.25a.75.75 0 0 1 .913-.143Z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              <p className="col-span-11">
+                Fast and low-cost payments guaranteed.
+              </p>
+            </li>
+          </ul>
+          <div className="font-medium text-sm space-y-8 hidden md:block">
+            <div className="space-y-2">
+              <h6 className="text-sm">
+                {login ? "Don't have an accoount?" : "Already have an account?"}
+              </h6>
+              <PrimaryButton
+                title={
+                  login ? "Sign up for an account" : "Log in to your account"
+                }
+                onClick={showNewForm}
+              />
+            </div>
+            <div className="space-y-2">
+              <p>For more information, please contact</p>
+
+              <a
+                href="mailto:payments@useyala.com"
+                className="font-bold block text-yalaPrimary w-fit"
+              >
+                payments@useyala.com
+              </a>
+            </div>
+          </div>
         </div>
-      </div>
+        <div className="text-sm px-[5%] space-y-8 lg:space-y-5 grid">
+          <form className="grid h-full gap-4 content-center">
+            {login ? (
+              <SignIn
+                password={password}
+                // username={username}
+                email={email}
+                setEmail={setEmail}
+                setPassword={setPassword}
+                // setUsername={setUsername}
+              />
+            ) : (
+              <SignUp
+                password={password}
+                // username={username}
+                setPassword={setPassword}
+                // setUsername={setUsername}
+                email={email}
+                setEmail={setEmail}
+                fullName={fullName}
+                setFullName={setFullName}
+                confirmPassword={confirmPassword}
+                setConfirmPassword={setConfirmPassword}
+              />
+            )}
+            <SecondaryButton
+              title={loading ? "Loading..." : "Continue"}
+              disabled={loading}
+              onClick={handleProfileUpdate}
+              state={loading}
+            />
+          </form>
+          {error && (
+            <p
+              className={`${bg} grid place-content-center font-medium text-white min-h-10 rounded-md`}
+            >
+              {error}
+            </p>
+          )}
+          <div className="text-center font-medium">
+            By clicking on continue, you have accepted the{" "}
+            <button className="font-bold text-yalaPrimary block mx-auto">
+              Terms and Conditions
+            </button>
+          </div>
+        </div>
+        <div className="font-medium text-sm space-y-8 px-[5%] mt-14 pb-12 md:hidden">
+          <div className="space-y-2">
+            <h6 className="text-sm">
+              {login ? "Don't have an accoount?" : "Already have an account?"}
+            </h6>
+            <PrimaryButton
+              title={
+                login ? "Sign up for an account" : "Log in to your account"
+              }
+              onClick={showNewForm}
+            />
+          </div>
+          <div className="space-y-2">
+            <p>For more information, please contact</p>
 
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-full sm:before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full sm:after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800 hover:dark:bg-opacity-30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore starter templates for Next.js.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50 text-balance`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
+            <a
+              href="mailto:payments@useyala.com"
+              className="font-bold block text-yalaPrimary w-fit"
+            >
+              payments@useyala.com
+            </a>
+          </div>
+        </div>
       </div>
     </main>
   );
