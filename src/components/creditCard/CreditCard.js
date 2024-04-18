@@ -1,7 +1,8 @@
 import Image from "next/image";
 // import mastercard from "@/images/mastercard.svg";
 import mastercard from "../../images/mastercard.svg";
-import chip from "../../images/chip.svg";
+import Chip from "../../images/Chip.svg";
+// import Chip from "../../images/chip.svg";
 import connect from "../../images/connect.svg";
 import React from "react";
 
@@ -16,7 +17,7 @@ const CreditCard = (props) => {
           {`$ ${props.balance}`}
         </h4>
         <div className="flex gap-3">
-          <Image src={chip} alt="chip" className="w-14" />
+          <Image src={Chip} alt="chip" className="w-14" />
           <Image src={connect} alt="connect" className="w-6" />
         </div>
         <p className="font-medium text-lg text-white uppercase z-10">
