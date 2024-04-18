@@ -4,21 +4,14 @@ import UserSummary from "../../components/userMenuSummary/UserSummary";
 import Image from "next/image";
 import Link from "next/link";
 import Logo from "../../images/yalaLogo.svg";
-// import Logo from "@/images/yalaLogo.svg";
 import React, { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import withAuth from "../../utils/ProtectedRoute";
 import { auth } from "../../lib/db";
 import useUserData from "../../utils/useUserData";
-// import db from "@/lib/db";
 
 const layout = ({ children }) => {
   const router = useRouter();
-
-  const handleNavigation = (link) => {
-    const router = useRouter();
-    router.push(link);
-  };
 
   const handleLogout = async () => {
     try {
@@ -33,7 +26,6 @@ const layout = ({ children }) => {
     { name: "Dashboard", link: "/dashboard" },
     { name: "Transfer", link: "/dashboard/transfer" },
     { name: "Profile", link: "/dashboard/profile" },
-    // { name: "Logout", link: "", onclick: handleLogout },
   ];
 
   const pathname = usePathname();
