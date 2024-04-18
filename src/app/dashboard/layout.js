@@ -10,7 +10,7 @@ import withAuth from "../../utils/ProtectedRoute";
 import { auth } from "../../lib/db";
 import useUserData from "../../utils/useUserData";
 
-const layout = ({ children }) => {
+const Layout = ({ children }) => {
   const router = useRouter();
 
   const handleLogout = async () => {
@@ -114,4 +114,4 @@ const layout = ({ children }) => {
   );
 };
 
-export default withAuth(layout);
+export default withAuth(Layout);
