@@ -54,7 +54,7 @@ const layout = ({ children }) => {
       </div>
       {mobile && (
         <div
-          className="bg-black/50 fixed z-40 h-screen w-full top-0 left-0"
+          className="bg-black/50 fixed z-40 h-screen w-full top-0 left-0 md:hidden"
           onClick={toggleMenu}
         >
           <div

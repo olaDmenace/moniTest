@@ -109,7 +109,7 @@ const Profile = () => {
   };
 
   return (
-    <div className="px-4 content-start py-10 grid md:col-span-2 lg:col-span-4 md:px-8 md:max-h-screen md:py-5 mb-10 lg:grid-flow-col lg:grid-cols-1 lg:gap-6 lg:pt-12 md:mb-0">
+    <div className="px-4 content-start py-10 grid md:col-span-2 lg:col-span-4 md:px-8 md:max-h-screen md:py-5 pb-10 lg:grid-flow-col lg:grid-cols-1 lg:gap-6 lg:pt-12 md:mb-0">
       <div className="grid gap-5 md:pt-[15%] lg:pt-0">
         <div className="mx-auto flex items-center text-black/70 gap-2">
           <Image
