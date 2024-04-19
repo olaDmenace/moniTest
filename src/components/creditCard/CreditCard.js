@@ -4,9 +4,11 @@ import mastercard from "../../images/mastercard.svg";
 import Chip from "../../images/Chip.svg";
 // import Chip from "../../images/chip.svg";
 import connect from "../../images/connect.svg";
-import React from "react";
+import React, { useState } from "react";
 
 const CreditCard = (props) => {
+  const [balance, setBalance] = useState(true);
+
   return (
     <div className="relative">
       <div className="absolute right-[-15%] md:right-[-5%] top-[-15%] size-32 bg-gradient-radial from-amber-500 to-yalaPrimary rounded-full"></div>
@@ -14,7 +16,10 @@ const CreditCard = (props) => {
       <div className="bg-gradient-to-br border-yalaPrimary grid content-evenly px-8 from-white/50 to-[#5B5B5B]/80 h-60 md:h-72 lg:h-56 backdrop-blur-md backdrop-filter relative rounded-lg shadow-xl">
         <h4 className="text-yalaPrimary font-medium md:font-bold md:text-3xl text-2xl">
           <p className="text-yalaPrimary text-sm">Balance:</p>
-          {`$ ${props.balance}`}
+
+          <p onClick={() => setBalance(!balance)}>
+            {balance ? `$ ${props.balance}` : "*****"}
+          </p>
         </h4>
         <div className="flex gap-3">
           <Image src={Chip} alt="chip" className="w-14" />
