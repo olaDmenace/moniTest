@@ -7,7 +7,6 @@ import SecondaryButton from "../../../components/buttons/SecondaryButton";
 import useUserData from "../../../utils/useUserData";
 import { auth, storage, updateProfile, firestore } from "../../../lib/db";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-// import { doc, setDoc } from "firebase/firestore";
 import { updatePassword } from "firebase/auth";
 
 const Profile = () => {
@@ -44,7 +43,6 @@ const Profile = () => {
       case !pWord:
         errorMessage = "Please, enter your password";
         break;
-      // Add additional validation cases as needed
 
       default:
         const data = {

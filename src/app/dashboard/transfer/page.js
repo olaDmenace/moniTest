@@ -91,19 +91,17 @@ const Transfer = () => {
     }
   };
 
-  const isValidEmail = (email) => {
-    // Implement email validation logic here
-    return true; // Placeholder for email validation
-  };
+  // const isValidEmail = (email) => {
+  //   return true; // Placeholder for email validation
+  // };
 
   const isValidAmount = (amount) => {
-    // Implement amount validation logic here
-    return parseFloat(amount) > 0; // Placeholder for amount validation
+    return parseFloat(amount) > 0;
   };
 
   const handleSubmit = () => {
-    if (!isValidEmail(email) || !isValidAmount(amount)) {
-      console.log("Invalid email or amount");
+    if (email || !isValidAmount(amount)) {
+      alert("Invalid email or amount");
       return;
     }
     transferFunds(user.uid, email, parseFloat(amount));

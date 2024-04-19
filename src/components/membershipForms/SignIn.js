@@ -1,14 +1,7 @@
 import React from "react";
 import FormInput from "../formInput/FormInput";
 
-const SignIn = ({
-  // username,
-  // setUsername,
-  password,
-  setPassword,
-  email,
-  setEmail,
-}) => {
+const SignIn = ({ password, setPassword, email, setEmail }) => {
   return (
     <>
       <FormInput

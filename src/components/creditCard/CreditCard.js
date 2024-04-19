@@ -1,8 +1,6 @@
 import Image from "next/image";
-// import mastercard from "@/images/mastercard.svg";
 import mastercard from "../../images/mastercard.svg";
 import Chip from "../../images/Chip.svg";
-// import Chip from "../../images/chip.svg";
 import connect from "../../images/connect.svg";
 import React, { useState } from "react";
 

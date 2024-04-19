@@ -9,9 +9,7 @@ import FormInput from "../../components/formInput/FormInput";
 import SecondaryButton from "../../components/buttons/SecondaryButton";
 
 const Dashboard = () => {
-  // const sorts = ["All", "Revenue", "Expense"];
   const user = useUserData();
-  // console.log(user);
 
   const [userData, setUserData] = useState(null);
   const [pop, setPop] = useState(false);

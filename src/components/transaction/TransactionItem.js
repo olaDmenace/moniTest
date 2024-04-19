@@ -3,8 +3,6 @@ import React, { useEffect, useState } from "react";
 const TransactionItem = ({ amount, sender, spendType, sent }) => {
   const [senderName, setSenderName] = useState("");
 
-  // console.log(sender);
-
   useEffect(() => {
     if (sender) {
       setSenderName(sender);

@@ -1,4 +1,3 @@
-// utils/withAuth.js
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { auth } from "../lib/db";
@@ -10,7 +9,7 @@ const withAuth = (WrappedComponent) => {
     useEffect(() => {
       const unsubscribe = auth.onAuthStateChanged((user) => {
         if (!user) {
-          router.push("/"); // Redirect to login page if not authenticated
+          router.push("/");
         }
       });
 

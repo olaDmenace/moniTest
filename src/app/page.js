@@ -47,11 +47,9 @@ export default function Home() {
           // Signed in
           const user = userCredential.user;
           setBg("bg-green-700");
-          // console.log(user);
           setError("Account login success");
           setEmail("");
           setPassword("");
-          // setLoading(false);
           router.push("/dashboard"); // Redirect to dashboard after successful login
         } catch (error) {
           console.log(error.message);
@@ -59,7 +57,6 @@ export default function Home() {
             setError("Invalid login credentials");
           } else {
             setError("Failed to sign in, please try again");
-            // setLoading(false);
           }
         }
         setLoading(false);
@@ -80,10 +77,8 @@ export default function Home() {
             );
             const user = userCredential.user;
 
-            // Update user's profile with fullName
             await updateProfile(user, { displayName: fullName });
 
-            // Add additional data to the user's profile in Firestore
             await setDoc(doc(firestore, "users", user.uid), {
               email: user.email,
               displayName: fullName,
@@ -111,9 +106,7 @@ export default function Home() {
             } else {
               setError("Account creation failed");
             }
-            // setError(error);
             setLoading(false);
-            // throw error;
           }
         }
       }
@@ -208,18 +201,14 @@ export default function Home() {
             {login ? (
               <SignIn
                 password={password}
-                // username={username}
                 email={email}
                 setEmail={setEmail}
                 setPassword={setPassword}
-                // setUsername={setUsername}
               />
             ) : (
               <SignUp
                 password={password}
-                // username={username}
                 setPassword={setPassword}
-                // setUsername={setUsername}
                 email={email}
                 setEmail={setEmail}
                 fullName={fullName}
