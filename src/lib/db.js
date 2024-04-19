@@ -3,6 +3,7 @@ import { initializeApp } from "firebase/app";
 import {
   getAuth,
   createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
   updateProfile,
 } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
@@ -27,6 +28,7 @@ export {
   auth,
   firestore,
   createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
   updateProfile,
   storage,
 };

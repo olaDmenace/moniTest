@@ -4,8 +4,12 @@ import SecondaryButton from "../components/buttons/SecondaryButton";
 import SignIn from "../components/membershipForms/SignIn";
 import SignUp from "../components/membershipForms/SignUp";
 import Navbar from "../components/navigation/Navbar";
-import { auth, createUserWithEmailAndPassword, updateProfile } from "../lib/db";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import {
+  auth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile,
+} from "../lib/db";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { doc, setDoc } from "firebase/firestore";
