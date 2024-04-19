@@ -7,8 +7,6 @@ import { firestore } from "../../lib/db";
 import { useEffect, useState } from "react";
 import FormInput from "../../components/formInput/FormInput";
 import SecondaryButton from "../../components/buttons/SecondaryButton";
-// import { auth } from "@/lib/db";
-// import { useEffect, useState } from "react";
 
 const Dashboard = () => {
   // const sorts = ["All", "Revenue", "Expense"];
@@ -20,19 +18,74 @@ const Dashboard = () => {
   const [amount, setAmount] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // let userData;
+  // Function to fetch user data by ID
+  const fetchUserDataById = async (userId) => {
+    try {
+      const userDocRef = doc(firestore, "users", userId);
+      const userDocSnap = await getDoc(userDocRef);
+      if (userDocSnap.exists()) {
+        return userDocSnap.data();
+      } else {
+        return null;
+      }
+    } catch (error) {
+      console.error("Error fetching user document:", error);
+      return null;
+    }
+  };
+
+  // Function to fetch sender data
+  const fetchSenderData = (senderId) => {
+    return fetchUserDataById(senderId)
+      .then((senderData) => {
+        return senderData.displayName;
+      })
+      .catch((error) => {
+        console.error("Error fetching sender data:", error);
+      });
+  };
+
+  // Function to fetch recipient data
+  const fetchRecipientData = (recipientId) => {
+    return fetchUserDataById(recipientId)
+      .then((senderData) => {
+        return senderData.displayName;
+      })
+      .catch((error) => {
+        console.error("Error fetching sender data:", error);
+      });
+  };
+
+  // Inside your fetchUserData function
   const fetchUserData = async (id) => {
     try {
       const userDocRef = doc(firestore, "users", id);
-
       const userDocSnap = await getDoc(userDocRef);
 
-      if (userDocSnap) {
-        setUserData(userDocSnap.data());
+      if (userDocSnap.exists()) {
+        const userData = userDocSnap.data();
+
+        // Extract senderId and recipientId for each transaction
+        const transactions = await Promise.all(
+          userData.transactionHistory.map(async (transaction) => {
+            // Fetch sender and recipient data
+            const sender = await fetchSenderData(transaction.senderId);
+            const recipient = await fetchRecipientData(transaction.recipientId);
+
+            return {
+              amount: transaction.amount,
+              sender: sender,
+              recipient: recipient,
+            };
+          })
+        );
+
+        setUserData(userData);
       } else {
         alert("Data not found");
       }
     } catch (error) {
+      console.error("Error fetching document", error);
       alert("Error fetching document");
     }
   };
@@ -57,11 +110,6 @@ const Dashboard = () => {
       alert("Deposit declined");
     }
     setLoading(false);
-  };
-
-  const objectToArray = (obj) => {
-    if (obj == null) return []; // Return an empty array if obj is nullish
-    return Object.entries(obj).map(([key, value]) => ({ key, value }));
   };
 
   return (
@@ -122,8 +170,14 @@ const Dashboard = () => {
                   <TransactionItem
                     key={index}
                     amount={item.amount}
+                    sender={
+                      item.senderId === user?.uid
+                        ? fetchRecipientData(item?.recipientId)
+                        : fetchSenderData(item?.senderId)
+                    }
+                    sent={item.senderId === user?.uid}
                     spendType={
-                      item.senderId === user?.uid ? "Outflow" : "Inflow"
+                      item.senderId === user?.uid ? "Sent to" : "Received From"
                     }
                   />
                 ))}
