@@ -11,14 +11,6 @@ const TransactionItem = ({ amount, sender, spendType, sent }) => {
     } else {
       setSenderName("Unknown Sender");
     }
-    // console.log(sender.displayName);
-    // // Check if sender data is available
-    // if (sender && typeof sender === "object" && sender.displayName) {
-    //   setSenderName(sender.displayName);
-    // } else {
-    //   // Handle if sender data is not available
-    //   setSenderName("Unknown Sender");
-    // }
   }, [sender]);
 
   return (

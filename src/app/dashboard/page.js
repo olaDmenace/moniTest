@@ -156,7 +156,6 @@ const Dashboard = () => {
           <h2 className="font-bold text-2xl lg:text-xl text-black">
             Transactions
           </h2>
-          {/* <button>View All</button> */}
         </div>
         <div className="space-y-5 md:space-y-2">
           {userData?.transactionHistory.length === 0 ? (

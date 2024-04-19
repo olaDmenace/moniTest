@@ -75,6 +75,8 @@ const Transfer = () => {
           await batch.commit(batch);
 
           alert("Transfer successful");
+          setAmount("");
+          setEmail("");
         } else {
           alert("Recipient not found");
         }
@@ -88,63 +90,6 @@ const Transfer = () => {
       setLoading(false);
     }
   };
-
-  // const transferFunds = async (senderId, recipientEmail, amount) => {
-  //   setLoading(true);
-  //   try {
-  //     const senderDocRef = doc(firestore, "users", senderId);
-  //     const senderDocSnap = await getDoc(senderDocRef);
-  //     const senderData = senderDocSnap.data();
-  //     const senderBalance = senderData.walletBallance;
-
-  //     if (senderBalance >= amount) {
-  //       const updatedSenderBalance = senderBalance - amount;
-  //       await updateDoc(senderDocRef, { walletBallance: updatedSenderBalance });
-
-  //       const recipientQuerySnapshot = await getDocs(
-  //         query(
-  //           collection(firestore, "users"),
-  //           where("email", "==", recipientEmail)
-  //         )
-  //       );
-
-  //       if (!recipientQuerySnapshot.empty) {
-  //         const recipientDoc = recipientQuerySnapshot.docs[0];
-  //         const recipientId = recipientDoc.id;
-  //         const recipientDocRef = doc(firestore, "users", recipientId);
-  //         const recipientDocSnap = await getDoc(recipientDocRef);
-  //         const recipientData = recipientDocSnap.data();
-  //         const recipientBalance = recipientData.walletBallance;
-  //         const updatedRecipientBalance = recipientBalance + amount;
-  //         await updateDoc(recipientDocRef, {
-  //           walletBallance: updatedRecipientBalance,
-  //         });
-
-  //         const transactionData = { amount, senderId, recipientId };
-  //         const batch = writeBatch(firestore);
-  //         batch.update(senderDocRef, {
-  //           transactionHistory: arrayUnion(transactionData),
-  //         });
-  //         batch.update(recipientDocRef, {
-  //           transactionHistory: arrayUnion(transactionData),
-  //         });
-  //         await batch.commit(batch);
-
-  //         alert("Transfer successful");
-  //         setAmount("");
-  //         setEmail("");
-  //       } else {
-  //         alert("Recipient not found");
-  //       }
-  //     } else {
-  //       alert("Insufficient balance");
-  //     }
-  //   } catch (error) {
-  //     alert("Error transferring funds");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
 
   const isValidEmail = (email) => {
     // Implement email validation logic here
