@@ -72,7 +72,7 @@ const Transfer = () => {
           batch.update(recipientDocRef, {
             transactionHistory: arrayUnion(transactionData),
           });
-          await commitBatch(batch);
+          await batch.commit(batch);
 
           alert("Transfer successful");
         } else {
@@ -82,6 +82,7 @@ const Transfer = () => {
         alert("Insufficient balance");
       }
     } catch (error) {
+      console.log(error);
       alert("Error transferring funds:");
     } finally {
       setLoading(false);
