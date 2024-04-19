@@ -5,7 +5,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
   title: "Moni Code Test",
-  description: "-by one boy like that",
+  description: "By olaDmenace - good for nothing, good at nothing",
 };
 
 export default function RootLayout({ children }) {
