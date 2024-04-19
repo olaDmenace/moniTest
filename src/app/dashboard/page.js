@@ -28,16 +28,12 @@ const Dashboard = () => {
       const userDocSnap = await getDoc(userDocRef);
 
       if (userDocSnap) {
-        // console.log(userDocSnap.data());
-        // console.log(Array.isArray(userDocSnap.data().transactionHistory));
-        // console.log(userDocSnap.data().transactionHistory);
-        // console.log(typeof userDocSnap.data().transactionHistory);
         setUserData(userDocSnap.data());
       } else {
-        console.log("Data not found");
+        alert("Data not found");
       }
     } catch (error) {
-      console.error("Error fetching document", error);
+      alert("Error fetching document");
     }
   };
 
@@ -58,15 +54,10 @@ const Dashboard = () => {
       setPop(false);
       window.location.reload();
     } catch (error) {
-      // console.error("Error depositing money:", error);
       alert("Deposit declined");
     }
     setLoading(false);
   };
-
-  // const objectToArray = (obj) => {
-  //   return Object.entries(obj).map(([key, value]) => ({ key, value }));
-  // };
 
   const objectToArray = (obj) => {
     if (obj == null) return []; // Return an empty array if obj is nullish
@@ -126,20 +117,13 @@ const Dashboard = () => {
             </p>
           ) : (
             <>
-              {/* <div className="flex justify-around lg:justify-between">
-                {sorts.map((sort, index) => (
-                  <button key={index} className="font-bold lg:font-semibold">
-                    {sort}
-                  </button>
-                ))}
-              </div> */}
               <div className="h-96 md:h-[850px] overflow-y-auto divide-y md:px-4 lg:px-0">
                 {userData?.transactionHistory.map((item, index) => (
                   <TransactionItem
                     key={index}
                     amount={item.amount}
                     spendType={
-                      item.senderId === user.uid ? "Outflow" : "Inflow"
+                      item.senderId === user?.uid ? "Outflow" : "Inflow"
                     }
                   />
                 ))}
